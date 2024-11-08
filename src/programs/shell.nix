@@ -44,10 +44,11 @@ in {
       enableIonIntegration = ion.enable;
       enableNushellIntegration = nu.enable;
       git = true;
-      icons = true;
+      icons = "auto";
       extraOptions = [
         "--sort=extension"
         "--group-directories-first"
+        "--hyperlink"
         # long view
         "--header"
         "--smart-group"
