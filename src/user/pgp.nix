@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -17,9 +18,9 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = {
+  config = lib.mkIf false {
     programs.gpg = {
-      enable = config.system.isNixOS;
+      enable = config.system.isNixOS && (!osConfig.programs.gnupg.agent.enable);
       homedir = "${config.xdg.dataHome}/gnupg";
     };
 
