@@ -7,39 +7,31 @@
 }:
 with builtins; let
   std = pkgs.lib;
-
-  fish = config.programs.fish;
-  zsh = config.programs.zsh;
-  nu = config.programs.nushell;
-
-  gpg = config.programs.gpg;
-  agent = config.services.gpg-agent;
+  gnupg = osConfig.programs.gnupg or {};
+  agentEnabled = gnupg.agent.enable or false;
+  dirmngrEnabled = gnupg.dirmngr.enable or false;
 in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = lib.mkIf false {
-    programs.gpg = {
-      enable = config.system.isNixOS && (!osConfig.programs.gnupg.agent.enable);
-      homedir = "${config.xdg.dataHome}/gnupg";
-    };
-
-    services.gpg-agent = {
-      enable = true;
-      enableSshSupport = true;
-
-      enableBashIntegration = true;
-      enableFishIntegration = fish.enable;
-      enableZshIntegration = zsh.enable;
-      enableNushellIntegration = nu.enable;
-
-      defaultCacheTtl = 7200; # 2 hours
-      defaultCacheTtlSsh = agent.defaultCacheTtl;
-    };
-
-    systemd.user.sessionVariables = lib.mkIf (!config.programs.gpg.enable) {
-      "GNUPGHOME" = config.programs.gpg.homedir;
-    };
-  };
+  config = lib.mkMerge [
+    (lib.mkIf agentEnabled {
+      home.file = {
+        ".gnupg/gpg.conf" = {
+          text = ''
+          '';
+        };
+      };
+    })
+    (lib.mkIf dirmngrEnabled {
+      home.file = {
+        ".gnupg/dirmngr.conf" = {
+          text = ''
+            keyserver hkps://keys.openpgp.org
+          '';
+        };
+      };
+    })
+  ];
   meta = {};
 }
