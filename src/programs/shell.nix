@@ -14,7 +14,6 @@ in {
 
   config = {
     home.packages = with pkgs; [
-      rargs
     ];
 
     programs.fd = {
