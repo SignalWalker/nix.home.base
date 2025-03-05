@@ -55,9 +55,16 @@ in {
       dataHome = "${home}/.local/share";
       systemDirs = {
         data =
-          if nix.settings.use-xdg-base-directories
-          then ["${xdg.stateHome}/nix/profile"]
-          else ["${home}/.nix-profile"];
+          (
+            if nix.settings.use-xdg-base-directories
+            then ["${xdg.stateHome}/nix/profile"]
+            else ["${home}/.nix-profile"]
+          )
+          ++ (
+            if osConfig.services.flatpak.enable
+            then ["/usr/share" "/var/lib/flatpak/exports/share" "${xdg.dataHome}/flatpak"]
+            else []
+          );
       };
       userDirs = {
         enable = true;
