@@ -93,7 +93,7 @@ in {
     };
 
     programs.zellij = {
-      enable = true;
+      enable = false;
       # enableBashIntegration = true;
       # enableFishIntegration = fish.enable;
       # enableZshIntegration = zsh.enable;
