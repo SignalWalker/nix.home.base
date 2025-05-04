@@ -3,13 +3,15 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   prg = config.programs;
   fish = prg.fish;
   zsh = prg.zsh;
   ion = prg.ion;
   nu = prg.nushell;
-in {
+in
+{
   imports = lib.signal.fs.path.listFilePaths ./shell;
 
   config = {
@@ -59,7 +61,9 @@ in {
 
     programs.lsd = {
       enable = true;
-      enableAliases = false;
+      enableZshIntegration = false;
+      enableFishIntegration = false;
+      enableBashIntegration = false;
       # package = pkgs.lsd;
       settings = {
         classic = false;
