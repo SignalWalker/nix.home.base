@@ -37,10 +37,6 @@ in
       la = "eza --all";
       lla = "eza --long --all";
       rm = "ounce rm";
-      nvim = "ounce --trace nvim";
-      vim = "ounce --trace vim";
-      emacs = "ounce --trace emacs";
-      nano = "ounce --trace nano";
     };
 
     programs.eza = {
