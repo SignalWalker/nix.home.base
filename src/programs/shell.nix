@@ -12,7 +12,7 @@ let
   nu = prg.nushell;
 in
 {
-  imports = lib.signal.fs.path.listFilePaths ./shell;
+  imports = lib.listFilePaths ./shell;
 
   config = {
     home.packages = with pkgs; [
@@ -36,7 +36,6 @@ in
       lt = "eza --tree";
       la = "eza --all";
       lla = "eza --long --all";
-      rm = "ounce rm";
     };
 
     programs.eza = {

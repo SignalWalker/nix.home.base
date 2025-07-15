@@ -10,7 +10,7 @@ with builtins; let
   xdg = config.xdg;
   name = "hm-wipe-history";
 in {
-  imports = lib.signal.fs.path.listFilePaths ./system;
+  imports = lib.listFilePaths ./system;
   config = {
     systemd.user.timers.${name} = {
       Unit = {

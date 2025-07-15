@@ -13,7 +13,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./file_browser;
+  imports = lib.listFilePaths ./file_browser;
   config = {
     programs.ranger = {
       enable = true;

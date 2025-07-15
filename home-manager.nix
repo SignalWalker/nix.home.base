@@ -13,7 +13,7 @@ in {
       type = types.attrsOf types.anything;
     };
   };
-  imports = lib.signal.fs.path.listFilePaths ./src;
+  imports = lib.listFilePaths ./src;
   config = {
     programs.home-manager.enable = true;
     home.enableNixpkgsReleaseCheck = true;

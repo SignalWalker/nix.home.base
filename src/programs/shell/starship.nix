@@ -3,293 +3,322 @@
   pkgs,
   ...
 }:
-with builtins; {
-  programs.starship = let
-    prg = config.programs;
-  in {
-    enable = true;
-    enableBashIntegration = true;
-    enableFishIntegration = prg.fish.enable;
-    enableIonIntegration = prg.ion.enable;
-    enableZshIntegration = prg.zsh.enable;
-    settings = {
-      add_newline = false;
-      right_format = "$time";
+with builtins;
+{
+  programs.starship =
+    let
+      prg = config.programs;
+    in
+    {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = prg.fish.enable;
+      enableIonIntegration = prg.ion.enable;
+      enableZshIntegration = prg.zsh.enable;
+      settings = {
+        add_newline = false;
+        right_format = "$time";
 
-      fill = {
-        symbol = "-";
-        style = "bold black";
-      };
+        fill = {
+          symbol = "-";
+          style = "bold black";
+        };
 
-      sudo = rec {
-        disabled = true;
-        symbol = "⚿ ";
-        format = "\\[$symbol\\]";
-      };
+        sudo = rec {
+          disabled = true;
+          symbol = "⚿ ";
+          format = "\\[$symbol\\]";
+        };
 
-      time = {
-        disabled = false;
-        format = "⏱ [$time]($style)";
-      };
+        time = {
+          disabled = false;
+          format = "⏱ [$time]($style)";
+        };
 
-      username = {
-        format = "\\[[$user]($style)\\]";
-      };
+        username = {
+          format = "\\[[$user]($style)\\]";
+        };
 
-      status = {
-        disabled = false;
-      };
+        status = {
+          disabled = false;
+        };
 
-      memory_usage = rec {
-        disabled = false;
-        symbol = " ";
-        format = "\\[$symbol[$ram( | $swap)]($style)\\]";
-      };
+        memory_usage = rec {
+          disabled = false;
+          symbol = " ";
+          format = "\\[$symbol[$ram( | $swap)]($style)\\]";
+        };
 
-      directory = {
-        truncate_to_repo = false;
-        read_only = " ";
-        fish_style_pwd_dir_length = 2;
-      };
+        directory = {
+          truncate_to_repo = false;
+          read_only = " ";
+          fish_style_pwd_dir_length = 2;
+        };
 
-      shell = {
-        disabled = false;
-        fish_indicator = "󰈺";
-        zsh_indicator = "↯";
-        ion_indicator = "";
-        nu_indicator = "ǂ";
-      };
+        shell = {
+          disabled = false;
+          fish_indicator = "󰈺";
+          zsh_indicator = "↯";
+          ion_indicator = "";
+          nu_indicator = "ǂ";
+        };
 
-      shlvl = {
-        # disabled = false;
-        symbol = " ";
-      };
+        shlvl = {
+          # disabled = false;
+          symbol = " ";
+        };
 
-      battery = {
-        display = [
-          {
-            threshold = 10;
-            style = "bold red";
-          }
-          {
-            threshold = 100;
-            style = "yellow";
-          }
-        ];
-      };
+        battery = {
+          display = [
+            {
+              threshold = 10;
+              style = "bold red";
+            }
+            {
+              threshold = 100;
+              style = "yellow";
+            }
+          ];
+        };
 
-      character = {
-        success_symbol = "[☽](green)";
-        error_symbol = "[☽](red)";
-        vicmd_symbol = "[☾](green)";
-      };
+        character = {
+          success_symbol = "[☽](green)";
+          error_symbol = "[☽](red)";
+          vicmd_symbol = "[☾](green)";
+        };
 
-      cmd_duration = {
-        format = "\\[[⏱ $duration]($style)\\]";
-      };
+        cmd_duration = {
+          format = "\\[[⏱ $duration]($style)\\]";
+        };
 
-      ### SPECIFIC
+        custom = {
+          jj = {
+            command = ''
+              jj log -r@ -n1 --ignore-working-copy --no-graph --color always  -T '
+                separate(" ",
+                  bookmarks.map(|x| truncate_end(10, x.name(), "…")).join(" "),
+                  tags.map(|x| truncate_end(10, x.name(), "…")).join(" "),
+                  surround("\"", "\"", truncate_end(24, description.first_line(), "…")),
+                  if(conflict, "conflict"),
+                  if(divergent, "divergent"),
+                  if(hidden, "hidden"),
+                )
+              '
+            '';
+            when = "jj root";
+            symbol = "jj";
+            format = "\\[(green)$symbol(blue) $output(white)\\]";
+          };
+          "jjstate" = {
+            when = "jj root";
+            command = ''
+              jj log -r@ -n1 --no-graph -T "" --stat | tail -n1 | sd "(\d+) files? changed, (\d+) insertions?\(\+\), (\d+) deletions?\(-\)" ' $${1}m $${2}+ $${3}-' | sd " 0." ""
+            '';
+          };
+        };
 
-      aws = {
-        symbol = "  ";
-        format = "\\[[$symbol($profile)(\\($region\\))(\\[$duration\\])]($style)\\]";
-      };
+        ### SPECIFIC
 
-      cmake = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        aws = {
+          symbol = "  ";
+          format = "\\[[$symbol($profile)(\\($region\\))(\\[$duration\\])]($style)\\]";
+        };
 
-      cobol = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        cmake = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      conda = {
-        symbol = " ";
-        format = "\\[[$symbol$environment]($style)\\]";
-      };
+        cobol = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      crystal = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        conda = {
+          symbol = " ";
+          format = "\\[[$symbol$environment]($style)\\]";
+        };
 
-      dart = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        crystal = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      deno = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        dart = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      docker_context = {
-        symbol = " ";
-        format = "\\[[$symbol$context]($style)\\]";
-      };
+        deno = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      dotnet = {
-        format = "\\[[$symbol($version)(🎯 $tfm)]($style)\\]";
-      };
+        docker_context = {
+          symbol = " ";
+          format = "\\[[$symbol$context]($style)\\]";
+        };
 
-      elixir = {
-        symbol = " ";
-        format = "\\[[$symbol($version \\(OTP $otp_version\\))]($style)\\]";
-      };
+        dotnet = {
+          format = "\\[[$symbol($version)(🎯 $tfm)]($style)\\]";
+        };
 
-      elm = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        elixir = {
+          symbol = " ";
+          format = "\\[[$symbol($version \\(OTP $otp_version\\))]($style)\\]";
+        };
 
-      erlang = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        elm = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      gcloud = {
-        format = "\\[[$symbol$account(@$domain)(\\($region\\))]($style)\\]";
-      };
+        erlang = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      git_branch = {
-        symbol = " ";
-        format = "\\[[$symbol$branch]($style)\\]";
-      };
+        gcloud = {
+          format = "\\[[$symbol$account(@$domain)(\\($region\\))]($style)\\]";
+        };
 
-      git_status = {
-        format = "([\\[$all_status$ahead_behind\\]]($style))";
-      };
+        git_branch = {
+          symbol = " ";
+          format = "\\[[$symbol$branch]($style)\\]";
+        };
 
-      golang = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        git_status = {
+          format = "([\\[$all_status$ahead_behind\\]]($style))";
+        };
 
-      helm = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        golang = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      hg_branch = {
-        symbol = " ";
-        format = "\\[[$symbol$branch]($style)\\]";
-      };
+        helm = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      java = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        hg_branch = {
+          symbol = " ";
+          format = "\\[[$symbol$branch]($style)\\]";
+        };
 
-      julia = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        java = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      kotlin = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        julia = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      kubernetes = {
-        format = "\\[[$symbol$context( \\($namespace\\))]($style)\\]";
-      };
+        kotlin = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      lua = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        kubernetes = {
+          format = "\\[[$symbol$context( \\($namespace\\))]($style)\\]";
+        };
 
-      nim = {
-        symbol = "";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        lua = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      nix_shell = {
-        symbol = "";
-        pure_msg = "";
-        impure_msg = "\\(impure\\)";
-        format = "\\[[$symbol$name$state]($style)\\]";
-      };
+        nim = {
+          symbol = "";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      guix_shell = {
-        symbol = "🐃";
-        format = "\\[[$symbol]($style)\\]";
-      };
+        nix_shell = {
+          symbol = "";
+          pure_msg = "";
+          impure_msg = "\\(impure\\)";
+          format = "\\[[$symbol$name$state]($style)\\]";
+        };
 
-      nodejs = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        guix_shell = {
+          symbol = "🐃";
+          format = "\\[[$symbol]($style)\\]";
+        };
 
-      ocaml = {
-        format = "\\[[$symbol($version)(\\($switch_indicator$switch_name\\))]($style)\\]";
-      };
+        nodejs = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      openstack = {
-        format = "\\[[$symbol$cloud(\\($project\\))]($style)\\]";
-      };
+        ocaml = {
+          format = "\\[[$symbol($version)(\\($switch_indicator$switch_name\\))]($style)\\]";
+        };
 
-      package = {
-        symbol = " ";
-        format = "\\[[$symbol$version]($style)\\]";
-      };
+        openstack = {
+          format = "\\[[$symbol$cloud(\\($project\\))]($style)\\]";
+        };
 
-      perl = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        package = {
+          symbol = " ";
+          format = "\\[[$symbol$version]($style)\\]";
+        };
 
-      php = rec {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        perl = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      pulumi = {
-        format = "\\[[$symbol$stack]($style)\\]";
-      };
+        php = rec {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      purescript = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        pulumi = {
+          format = "\\[[$symbol$stack]($style)\\]";
+        };
 
-      python = {
-        symbol = " ";
-        # format = "\\[[$symbol${pyenv_prefix}(${version})(\\($virtualenv\\))]($style)\\]"
-      };
+        purescript = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      red = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        python = {
+          symbol = " ";
+          # format = "\\[[$symbol${pyenv_prefix}(${version})(\\($virtualenv\\))]($style)\\]"
+        };
 
-      ruby = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        red = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      rust = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        ruby = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      scala = {
-        symbol = " ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        rust = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      swift = {
-        symbol = "ﯣ ";
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        scala = {
+          symbol = " ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      terraform = {
-        format = "\\[[$symbol$workspace]($style)\\]";
-      };
+        swift = {
+          symbol = "ﯣ ";
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      vagrant = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        terraform = {
+          format = "\\[[$symbol$workspace]($style)\\]";
+        };
 
-      vlang = {
-        format = "\\[[$symbol($version)]($style)\\]";
-      };
+        vagrant = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
 
-      zig = {
-        format = "\\[[$symbol($version)]($style)\\]";
+        vlang = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
+
+        zig = {
+          format = "\\[[$symbol($version)]($style)\\]";
+        };
       };
     };
-  };
 }

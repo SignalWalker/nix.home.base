@@ -5,7 +5,7 @@ inputs@{
   ...
 }:
 {
-  imports = lib.signal.fs.path.listFilePaths ./programs;
+  imports = lib.listFilePaths ./programs;
   config = {
     home.packages = with pkgs; [
       btop
