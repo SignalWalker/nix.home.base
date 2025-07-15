@@ -2,10 +2,6 @@
   description = "Home manager configuration - base";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    alejandra = {
-      url = "github:kamadorueda/alejandra";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,10 +25,24 @@
     with builtins;
     let
       std = nixpkgs.lib;
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+      nixpkgsFor = std.genAttrs systems (
+        system:
+        import nixpkgs {
+          localSystem = builtins.currentSystem or system;
+          crossSystem = system;
+          overlays = [ ];
+        }
+      );
       homeLib = import ./lib.nix;
     in
     {
-      formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
+      formatter = std.mapAttrs (system: pkgs: pkgs.nixfmt-rfc-style) nixpkgsFor;
       homeManagerModules.default =
         { ... }:
         {
