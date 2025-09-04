@@ -5,24 +5,25 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+with builtins;
+let
   fish = config.programs.fish;
-in {
-  options = with lib; {
+in
+{
+  options = {
     programs.fish = {
-      pluginSources = mkOption {
-        type = types.attrsOf types.path;
-        default = {};
+      pluginSources = lib.mkOption {
+        type = lib.types.attrsOf lib.types.path;
+        default = { };
       };
-      themes = mkOption {
-        type = types.attrsOf types.path;
-        default = {};
+      themes = lib.mkOption {
+        type = lib.types.attrsOf lib.types.path;
+        default = { };
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     programs.fish = {
       enable = true;
@@ -32,17 +33,20 @@ in {
       }) (attrNames fish.pluginSources);
     };
 
-    xdg.configFile = foldl' (acc: name: let
-      theme = fish.themes.${name};
-    in
+    xdg.configFile = foldl' (
+      acc: name:
+      let
+        theme = fish.themes.${name};
+      in
       acc
       // {
         "fish/themes/${name}.theme" = {
           source = theme;
         };
-      }) {} (attrNames fish.themes);
+      }
+    ) { } (attrNames fish.themes);
 
-    programs.zsh.initExtra = ''
+    programs.zsh.initContent = lib.mkOrder 1500 ''
       # if starting zsh in interactive mode and the parent process is not fish, exec fish
       if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
       then
@@ -51,5 +55,5 @@ in {
       fi
     '';
   };
-  meta = {};
+  meta = { };
 }

@@ -43,7 +43,7 @@
     in
     {
       formatter = std.mapAttrs (system: pkgs: pkgs.nixfmt-rfc-style) nixpkgsFor;
-      homeManagerModules.default =
+      homeModules.default =
         { ... }:
         {
           imports = [ ./home-manager.nix ];

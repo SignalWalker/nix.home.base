@@ -4,14 +4,16 @@
   lib,
   ...
 }:
-with lib; let
-in {
+with lib;
+let
+in
+{
   home.packages = with pkgs; [
     vivid
   ];
   programs.zsh = {
     enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     enableCompletion = true;
     enableVteIntegration = true;
     # must be false for fzf-tab to work
@@ -55,8 +57,8 @@ in {
       ];
     };
     defaultKeymap = "viins";
-    initExtra = ''
-      # export LS_COLORS=$(${pkgs.vivid}/bin/vivid generate gruvbox-dark-hard)
+    # export LS_COLORS=$(${pkgs.vivid}/bin/vivid generate gruvbox-dark-hard)
+    initContent = lib.mkOrder 1000 ''
 
       zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
       zstyle ':completion:*:descriptions' format '[%d]'
