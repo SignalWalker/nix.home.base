@@ -36,6 +36,7 @@ in
       lt = "eza --tree";
       la = "eza --all";
       lla = "eza --long --all";
+      lg = "eza --long --git";
     };
 
     programs.eza = {
@@ -45,7 +46,7 @@ in
       enableZshIntegration = zsh.enable;
       enableIonIntegration = ion.enable;
       enableNushellIntegration = nu.enable;
-      git = true;
+      git = false;
       icons = "auto";
       extraOptions = [
         "--sort=extension"
@@ -55,8 +56,8 @@ in
         "--header"
         "--smart-group"
         "--mounts"
-        "--extended"
         "--time-style=+%Y-%m-%d %H:%M"
+        "--git-repos-no-status"
       ];
     };
 
@@ -159,3 +160,4 @@ in
     };
   };
 }
+

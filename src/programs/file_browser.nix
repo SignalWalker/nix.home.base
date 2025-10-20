@@ -4,26 +4,27 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
 
   fish = config.programs.fish;
   zsh = config.programs.zsh;
   nu = config.programs.nushell;
-in {
-  options = with lib; {};
-  disabledModules = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
   imports = lib.listFilePaths ./file_browser;
   config = {
     programs.ranger = {
-      enable = true;
+      enable = false;
       settings = {
         draw_borders = "separators";
         unicode_ellipsis = true;
         update_title = true;
       };
     };
-    programs.nnn = {};
     programs.yazi = {
       enable = true;
       enableBashIntegration = true;
@@ -32,5 +33,6 @@ in {
       enableZshIntegration = zsh.enable;
     };
   };
-  meta = {};
+  meta = { };
 }
+

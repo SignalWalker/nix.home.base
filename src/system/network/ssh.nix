@@ -8,9 +8,6 @@
   options = { };
   imports = [ ];
   config = {
-    home.packages = [
-      pkgs.mosh
-    ];
     # TODO :: document this
     systemd.user.tmpfiles.rules = [
       "D %t/ssh 0700 - -"
@@ -24,7 +21,7 @@
       matchBlocks = {
         "*" = {
           forwardAgent = false;
-          addKeysToAgent = "yes";
+          addKeysToAgent = "no"; # FIX :: for some reason this forces it to ask for my password whenever i make an ssh connection; shouldn't the agent be unlocked at login...?
           compression = false;
           serverAliveInterval = 0;
           serverAliveCountMax = 3;
@@ -43,9 +40,6 @@
         "git.ashwalker.net" = {
           user = "forgejo";
           hostname = "terra.ashwalker.net";
-        };
-        "hermes.lan" = {
-          user = "root";
         };
         "ashwalker.net" = {
           hostname = "hermes.ashwalker.net";
