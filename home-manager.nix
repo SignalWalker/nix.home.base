@@ -1,14 +1,12 @@
 {
-  config,
-  pkgs,
   lib,
   ...
 }:
-with builtins; let
-  std = lib;
-in {
+{
   options = with lib; {
-    system.isNixOS = (mkEnableOption "allows configuration specific to NixOS systems") // {default = true;};
+    system.isNixOS = (mkEnableOption "allows configuration specific to NixOS systems") // {
+      default = true;
+    };
     signal.base.homeManagerSrc = mkOption {
       type = types.attrsOf types.anything;
     };
@@ -20,3 +18,4 @@ in {
     news.display = "notify";
   };
 }
+

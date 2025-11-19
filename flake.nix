@@ -18,11 +18,9 @@
   };
   outputs =
     inputs@{
-      self,
       nixpkgs,
       ...
     }:
-    with builtins;
     let
       std = nixpkgs.lib;
       systems = [
@@ -48,9 +46,9 @@
         {
           imports = [ ./home-manager.nix ];
           config = {
+            _module.args.homeBaseInputs = inputs;
             home.stateVersion = "22.11";
             lib.listFilePaths = homeLib.listFilePaths;
-            signal.base.homeManagerSrc = inputs.home-manager;
             programs.fish = {
               pluginSources = {
                 fzf = inputs.fishFzf;

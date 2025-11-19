@@ -3,9 +3,10 @@
   pkgs,
   ...
 }:
-with builtins; {
+with builtins;
+{
   config = {
-    home.sessionPath = [];
+    home.sessionPath = [ ];
     home.sessionVariables = config.systemd.user.sessionVariables;
   };
 }

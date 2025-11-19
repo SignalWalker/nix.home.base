@@ -1,5 +1,4 @@
-inputs@{
-  config,
+{
   pkgs,
   lib,
   ...
@@ -7,15 +6,18 @@ inputs@{
 {
   imports = lib.listFilePaths ./programs;
   config = {
-    home.packages = with pkgs; [
-      procs
-      du-dust
-      calc
-      killall
-      p7zip-rar
-      unzip
-      unrar
-      unar
+    home.packages = [
+      # system
+      pkgs.procs
+      pkgs.dust
+      pkgs.calc
+      pkgs.killall
+      # archives
+      pkgs.ouch
+      pkgs.p7zip-rar
+      pkgs.unzip
+      pkgs.unrar
+      pkgs.unar
     ];
 
     programs.btop = {

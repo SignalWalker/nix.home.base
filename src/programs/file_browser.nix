@@ -4,19 +4,18 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
-
   fish = config.programs.fish;
   zsh = config.programs.zsh;
   nu = config.programs.nushell;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./file_browser;
   config = {
+    home.packages = [
+      pkgs.file # file type info
+      pkgs.exiftool # yazi
+    ];
     programs.ranger = {
       enable = false;
       settings = {
@@ -31,8 +30,15 @@ in
       enableFishIntegration = fish.enable;
       enableNushellIntegration = nu.enable;
       enableZshIntegration = zsh.enable;
+      # plugins = {
+      #   sshfs = pkgs.yaziPlugins.
+      # };
+      settings = {
+        preview = {
+          "image_filter" = "nearest";
+        };
+      };
     };
   };
   meta = { };
 }
-

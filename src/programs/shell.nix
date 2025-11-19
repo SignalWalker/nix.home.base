@@ -15,8 +15,9 @@ in
   imports = lib.listFilePaths ./shell;
 
   config = {
-    home.packages = with pkgs; [
-      httm
+    home.packages = [
+      pkgs.httm
+      pkgs.trashy
     ];
 
     programs.fd = {
@@ -37,6 +38,7 @@ in
       la = "eza --all";
       lla = "eza --long --all";
       lg = "eza --long --git";
+      rt = "trashy put";
     };
 
     programs.eza = {
@@ -160,4 +162,3 @@ in
     };
   };
 }
-
