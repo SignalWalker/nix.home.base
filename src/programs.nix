@@ -13,7 +13,9 @@
       pkgs.calc
       pkgs.killall
       # archives
-      pkgs.ouch
+      (pkgs.ouch.override {
+        enableUnfree = true; # rar support
+      })
       pkgs.p7zip-rar
       pkgs.unzip
       pkgs.unrar
