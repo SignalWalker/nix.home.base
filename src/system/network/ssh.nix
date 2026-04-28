@@ -28,7 +28,7 @@
           hashKnownHosts = false;
           userKnownHostsFile = "~/.ssh/known_hosts";
           controlMaster = "auto";
-          controlPath = "$\{XDG_RUNTIME_DIR\}/ssh/socket-%r@%h:%p";
+          controlPath = "\${XDG_RUNTIME_DIR}/ssh/socket-%r@%h:%p";
           controlPersist = "no";
         };
         "github.com" = {

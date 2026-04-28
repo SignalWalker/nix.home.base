@@ -30,6 +30,7 @@ in
       enableFishIntegration = fish.enable;
       enableNushellIntegration = nu.enable;
       enableZshIntegration = zsh.enable;
+      shellWrapperName = "yy";
       # plugins = {
       #   sshfs = pkgs.yaziPlugins.
       # };

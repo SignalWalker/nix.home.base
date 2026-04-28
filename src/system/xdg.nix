@@ -22,11 +22,6 @@ in
         type = fileType "<varname>xdg.userDirs.templates</varname>" "" config.xdg.userDirs.templates;
         default = { };
       };
-      binHome = mkOption {
-        type = types.path;
-        readOnly = true;
-        default = "${config.home.homeDirectory}/.local/bin";
-      };
       binFile = mkOption {
         type = fileType "<varname>xdg.binHome</varname>" "" config.xdg.binHome;
         default = { };
@@ -45,9 +40,6 @@ in
       ) xdg.userDirs.templateFile)
       (lib.mapAttrs' (name: file: lib.nameValuePair "${xdg.binHome}/${name}" file) xdg.binFile)
     ];
-    home.sessionPath = [
-      xdg.binHome
-    ];
     home.preferXdgDirectories = true;
 
     xdg =
@@ -60,6 +52,8 @@ in
         configHome = "${home}/.config";
         stateHome = "${home}/.local/state";
         dataHome = "${home}/.local/share";
+        binHome = "${home}/.local/bin";
+        localBinInPath = true;
         systemDirs = {
           data =
             (
@@ -91,14 +85,14 @@ in
           templates = "${home}/templates";
           videos = "${home}/video";
           extraConfig = {
-            XDG_PROJECTS_DIR = "${home}/projects";
-            XDG_NOTES_DIR = "${home}/notes";
-            XDG_BACKUP_DIR = "${home}/backup";
-            XDG_SOURCE_DIR = "${home}/src";
-            XDG_GAMES_DIR = "${home}/games";
-            XDG_BOOKS_DIR = "${home}/books";
-            XDG_SCREENSHOTS_DIR = "${userDirs.pictures}/screenshots";
-            XDG_WALLPAPERS_DIR = "${userDirs.pictures}/wallpapers";
+            PROJECTS = "${home}/projects";
+            NOTES = "${home}/notes";
+            BACKUP = "${home}/backup";
+            SOURCE = "${home}/src";
+            GAMES = "${home}/games";
+            BOOKS = "${home}/books";
+            SCREENSHOTS = "${userDirs.pictures}/screenshots";
+            WALLPAPERS = "${userDirs.pictures}/wallpapers";
           };
         };
       };
