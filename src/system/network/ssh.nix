@@ -18,31 +18,31 @@
       extraOptionOverrides = {
         Ciphers = "aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr";
       };
-      matchBlocks = {
+      settings = {
         "*" = {
-          forwardAgent = false;
-          addKeysToAgent = "no"; # FIX :: for some reason this forces it to ask for my password whenever i make an ssh connection; shouldn't the agent be unlocked at login...?
-          compression = false;
-          serverAliveInterval = 0;
-          serverAliveCountMax = 3;
-          hashKnownHosts = false;
-          userKnownHostsFile = "~/.ssh/known_hosts";
-          controlMaster = "auto";
-          controlPath = "\${XDG_RUNTIME_DIR}/ssh/socket-%r@%h:%p";
-          controlPersist = "no";
+          ForwardAgent = false;
+          AddKeysToAgent = "no"; # FIX :: for some reason this forces it to ask for my password whenever i make an ssh connection; shouldn't the agent be unlocked at login...?
+          Compression = false;
+          ServerAliveInterval = 0;
+          ServerAliveCountMax = 3;
+          HashKnownHosts = false;
+          UserKnownHostsFile = "~/.ssh/known_hosts";
+          ControlMaster = "auto";
+          ControlPath = "\${XDG_RUNTIME_DIR}/ssh/socket-%r@%h:%p";
+          ControlPersist = "no";
         };
         "github.com" = {
-          user = "git";
+          User = "git";
         };
         "gitlab.com" = {
-          user = "git";
+          User = "git";
         };
         "git.ashwalker.net" = {
-          user = "forgejo";
-          hostname = "terra.ashwalker.net";
+          User = "forgejo";
+          Hostname = "terra.ashwalker.net";
         };
         "ashwalker.net" = {
-          hostname = "hermes.ashwalker.net";
+          Hostname = "hermes.ashwalker.net";
         };
       };
     };
