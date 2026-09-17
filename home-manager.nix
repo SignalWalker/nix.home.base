@@ -3,12 +3,12 @@
   ...
 }:
 {
-  options = with lib; {
-    system.isNixOS = (mkEnableOption "allows configuration specific to NixOS systems") // {
+  options = {
+    system.isNixOS = (lib.mkEnableOption "allows configuration specific to NixOS systems") // {
       default = true;
     };
-    signal.base.homeManagerSrc = mkOption {
-      type = types.attrsOf types.anything;
+    signal.base.homeManagerSrc = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
     };
   };
   imports = lib.listFilePaths ./src;
@@ -18,4 +18,3 @@
     news.display = "notify";
   };
 }
-
